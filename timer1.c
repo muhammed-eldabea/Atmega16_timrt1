@@ -76,10 +76,7 @@ void timer1_init(Timer1_configuration *ptrToStruct)
 
 	[ARGUMENT(S)]  :
 	   [IN]  : a pointer to structure with Timer1_configuration type
-
-
 	   [OUT] :  void
-
 	[Return]      : void
 
 	---------------------------------------------------------------------------------------*/
@@ -111,17 +108,17 @@ void timer1_init(Timer1_configuration *ptrToStruct)
 	switch (ptrToStruct->Timer1_interrupt_handler)
 	{
 	case (InputCapture_ICF1) :
-														TIMSK|=(1<<TICIE1) ; /*enable the input capture interrupt */
+																		TIMSK|=(1<<TICIE1) ; /*enable the input capture interrupt */
 	break ;
 
 	case (Output_Compare_A_Match_OCF1A) :
-													TIMSK |=(1<<OCIE1A) ; /*enable the output compare A interrupt */
+																	TIMSK |=(1<<OCIE1A) ; /*enable the output compare A interrupt */
 	break ;
 	case (Output_Compare_B_Match_OCF1B) :
-												TIMSK |=(1<<OCIE1B) ; /*enable the output compare B interrupt */
+																TIMSK |=(1<<OCIE1B) ; /*enable the output compare B interrupt */
 	break ;
 	case (OverFlow_TOV1) :
-											TIMSK |=(1<<TOIE1) ; /*enable the timer1 overflow interrupt*/
+															TIMSK |=(1<<TOIE1) ; /*enable the timer1 overflow interrupt*/
 	}
 
 
@@ -190,7 +187,7 @@ void Timer1_SetOutCompare_B_Register(unsigned short OC_value)
 	OCR1B=OC_value ;
 }
 
-unsigned short  Timer1_ReadICR(void)
+unsigned short  Timer1_ICU_ReadICR(void)
 {
 
 	/*--------------------------------------------------------------------------------------
@@ -246,15 +243,36 @@ void Timer1_callBack(void(*ptrFun)(void))
 	GptrToFunc=ptrFun ;
 }
 
+/*
+ * Description : configuration for the selected edge
+ * */
+void Timer1_ICU_selectheClock(unsigned char edge)
+{
+	TCCR1B = (TCCR1B & 0xBF)  | ((edge &0x01)<<6) ;
+}
 
 
+void Timer1_ICU_clearICR()
+{
+	/*
+	 * used to clear the ICR register value
+	 * */
+	ICR1 = 0 ;
+}
 
 
+void Icu_clearTimerValue(void)
+{
+	TCNT1 = 0;
+}
 
-
-
-
-
+void Timer1_Deinit(void)
+{
+	TCCR1A = 0;
+	TCCR1B = 0;
+	TCNT1 = 0;
+	ICR1 = 0;
+}
 
 
 

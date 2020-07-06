@@ -14,8 +14,9 @@
 
 
 /*=============================================> INCLUDES <=====================================================*/
-#include "micro_config.h"
-
+#include "avr/io.h"
+#include "avr/interrupt.h"
+#include "avr/delay.h"
 /*=====================================> Definitions and configuration <=========================================*/
 
 #define InputCaptureMode  1
@@ -53,7 +54,9 @@ typedef enum {
 	Timer1_externalClockSource_fallingEdge,Timer1_externalClockSource_risingEdge
 }ClockSelect;
 
-
+typedef enum {
+	Timer1_ICU_fallingEdge ,Timer1_ICU_RaissingEdge
+}Timer1_ICU_edge;
 
 
 
@@ -83,10 +86,15 @@ typedef struct
 
 /*=========================================> Function Declarations <===================================================*/
 
-
-
-
-
-
-
+void timer1_init(Timer1_configuration *ptrToStruct) ;
+void Timer1_set_initalvalue(unsigned char initial_value) ;
+void Timer1_SetOutCompare_A_Register(unsigned short OC_value) ;
+void Timer1_SetOutCompare_B_Register(unsigned short OC_value) ;
+unsigned short  Timer1_ICU_ReadICR(void) ;
+void Timer1_polling(unsigned char interrupt_flag) ;
+void Timer1_callBack(void(*ptrFun)(void)) ;
+void Timer1_ICU_selectheClock(unsigned char edge)  ;
+void Timer1_ICU_clearICR()  ;
+void Icu_clearTimerValue(void) ;
+void Timer1_Deinit(void) ;
 #endif /* TIMER1_H_ */
